@@ -5,7 +5,7 @@ public class CameraControl : MonoBehaviour
     public float m_DampTime = 0.2f; //カメラが必要な場所に移動するのに要するおおよその時間                
     public float m_ScreenEdgeBuffer = 4f;  //タンクが画面の橋にぶつからないようにするためのpadding         
     public float m_MinSize = 6.5f;                  
-    [HideInInspector] public Transform[] m_Targets; //タンク
+    /*[HideInInspector]*/ public Transform[] m_Targets; //タンク
 
 
     private Camera m_Camera; //サイズを変更するためのカメラへの参照
