@@ -3,22 +3,23 @@ using UnityEngine.UI;
 
 public class TankHealth : MonoBehaviour
 {
-    public float m_StartingHealth = 100f;          
-    public Slider m_Slider;                        
-    public Image m_FillImage;                      
+    public float m_StartingHealth = 100f; //開始時の体力          
+    public Slider m_Slider; //スライダーへの参照、体力を表示する値の処理                       
+    public Image m_FillImage;  //体力を表示するレンダリングの処理                    
     public Color m_FullHealthColor = Color.green;  
     public Color m_ZeroHealthColor = Color.red;    
-    public GameObject m_ExplosionPrefab;
+    public GameObject m_ExplosionPrefab; //爆発のプレハブへの参照
     
-    /*
+    
     private AudioSource m_ExplosionAudio;          
     private ParticleSystem m_ExplosionParticles;   
     private float m_CurrentHealth;  
-    private bool m_Dead;            
+    private bool m_Dead; //完全にやられたかどうか           
 
 
     private void Awake()
     {
+        //インスタンス化したプレハブのコンポーネントへの参照
         m_ExplosionParticles = Instantiate(m_ExplosionPrefab).GetComponent<ParticleSystem>();
         m_ExplosionAudio = m_ExplosionParticles.GetComponent<AudioSource>();
 
@@ -31,24 +32,46 @@ public class TankHealth : MonoBehaviour
         m_CurrentHealth = m_StartingHealth;
         m_Dead = false;
 
+        //UIを更新
         SetHealthUI();
-    }
-    */
 
+        if(m_CurrentHealth <= 0f && !m_Dead)
+        {
+            OnDeath();
+        }
+    }
+    
+    //受けたダメージ量をとって現在の体力を減らす
     public void TakeDamage(float amount)
     {
         // Adjust the tank's current health, update the UI based on the new health and check whether or not the tank is dead.
+        m_CurrentHealth -= amount;
+
+        SetHealthUI();
     }
 
-
+    //スライダーの値と色を設定
     private void SetHealthUI()
     {
         // Adjust the value and colour of the slider.
+        m_Slider.value = m_CurrentHealth;
+
+        m_FillImage.color = Color.Lerp(m_ZeroHealthColor, m_FullHealthColor, m_CurrentHealth / m_StartingHealth);
     }
 
-
+    //やられたフラグをONにしてエフェクトを再生する
     private void OnDeath()
     {
         // Play the effects for the death of the tank and deactivate it.
+        m_Dead = true;
+
+        //タンクが倒れた位置で爆発を再生するため、パーティクルの場所をタンクの今の場所に設定
+        m_ExplosionParticles.transform.position = transform.position;
+        m_ExplosionParticles.gameObject.SetActive(true);
+
+        m_ExplosionParticles.Play();
+        m_ExplosionAudio.Play();
+
+        gameObject.SetActive(false);
     }
 }
