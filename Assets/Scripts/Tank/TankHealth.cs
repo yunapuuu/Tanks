@@ -35,10 +35,7 @@ public class TankHealth : MonoBehaviour
         //UIを更新
         SetHealthUI();
 
-        if(m_CurrentHealth <= 0f && !m_Dead)
-        {
-            OnDeath();
-        }
+       
     }
     
     //受けたダメージ量をとって現在の体力を減らす
@@ -48,6 +45,11 @@ public class TankHealth : MonoBehaviour
         m_CurrentHealth -= amount;
 
         SetHealthUI();
+
+        if (m_CurrentHealth <= 0f && !m_Dead)
+        {
+            OnDeath();
+        }
     }
 
     //スライダーの値と色を設定
